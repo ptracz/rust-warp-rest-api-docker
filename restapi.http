@@ -1,0 +1,29 @@
+### Create
+POST http://localhost:8001/v1/groceries
+content-type: application/json
+
+{
+    "name": "apple",
+    "quantity": 3
+}
+
+### Create
+PUT http://localhost:8001/v1/groceries
+Content-Type: application/json
+
+{
+    "name": "apple",
+    "quantity": 5
+}
+
+### Get list
+GET http://localhost:8001/v1/groceries
+Content-Type: application/json
+
+### Delete
+DELETE http://localhost:8001/v1/groceries
+content-type: application/json
+
+{
+    "name": "apple"
+}
