@@ -4,7 +4,6 @@ use parking_lot::RwLock;
 use std::collections::HashMap;
 use std::sync::Arc;
 use serde::{Serialize, Deserialize};
-use futures::{future};
 
 type ResultHealth<T> = std::result::Result<T, Rejection>;
 
@@ -77,6 +76,11 @@ async fn get_grocery_list(
         ))
 }
 
+async fn health_handler() -> ResultHealth<impl Reply> {
+    info!("health check was called");
+    Ok("1")
+}
+
 fn delete_json() -> impl Filter<Extract = (Id,), Error = warp::Rejection> + Clone {
     // When accepting a body, we want a JSON body
     // (and to reject huge payloads)...
@@ -130,24 +134,11 @@ async fn main() {
         .and(store_filter.clone())
         .and_then(update_grocery_list);
 
+    let health_route = warp::path!("health").and_then(health_handler).with(warp::cors().allow_any_origin());
     
-    let routes = add_items.or(get_items).or(delete_item).or(update_item);
+    let routes = add_items.or(get_items).or(delete_item).or(update_item).or(health_route);
 
-    info!("Started REST API server at localhost:8001");
-    let rest_api_server = warp::serve(routes)
-        .run(([0, 0, 0, 0], 8001));
-    
-    let health_route = warp::path!("health").and_then(health_handler);
-    let routes = health_route.with(warp::cors().allow_any_origin());
-    info!("Started healthcheck server at localhost:8000");
-    let health_server = warp::serve(routes).run(([0, 0, 0, 0], 8000));
-
-    future::join (rest_api_server, health_server).await;
+    info!("Started REST API server at localhost:8000");
+    warp::serve(routes)
+        .run(([0, 0, 0, 0], 8000)).await;
 }
-
-async fn health_handler() -> ResultHealth<impl Reply> {
-    info!("health check was called");
-    Ok("1")
-}
-
-

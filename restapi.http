@@ -1,5 +1,8 @@
+@host = localhost
+@port = 8000
+@url = /v1/groceries
 ### Create
-POST http://localhost:8001/v1/groceries
+POST http://{{host}}:{{port}}{{url}}
 content-type: application/json
 
 {
@@ -8,7 +11,7 @@ content-type: application/json
 }
 
 ### Create
-PUT http://localhost:8001/v1/groceries
+PUT http://{{host}}:{{port}}{{url}}
 Content-Type: application/json
 
 {
@@ -17,13 +20,16 @@ Content-Type: application/json
 }
 
 ### Get list
-GET http://localhost:8001/v1/groceries
+GET http://{{host}}:{{port}}{{url}}
 Content-Type: application/json
 
 ### Delete
-DELETE http://localhost:8001/v1/groceries
+DELETE http://{{host}}:{{port}}{{url}}
 content-type: application/json
 
 {
     "name": "apple"
 }
+
+### Healthcheck
+GET http://{{host}}:{{port}}/health

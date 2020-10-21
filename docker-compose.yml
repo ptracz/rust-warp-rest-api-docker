@@ -6,7 +6,6 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8000:8000"
-      - "8001:8001"
     environment:
       - RUST_LOG=debug
     healthcheck:
